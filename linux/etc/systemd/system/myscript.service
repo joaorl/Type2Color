@@ -1,0 +1,10 @@
+
+[Unit]
+Description=My Startup Script
+After=default.target
+
+[Service]
+ExecStart=/usr/local/bin/my_script.sh
+
+[Install]
+WantedBy=default.target
