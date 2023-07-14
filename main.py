@@ -39,7 +39,7 @@ def main():
     strip.begin()
     # sudo dnf install evtest
     # sudo evtest
-    dev = InputDevice('/dev/input/event2')
+    dev = InputDevice('/dev/input/event0')
 
     colorWipe(strip, Color(0, 0, 0), 10)
     try:
