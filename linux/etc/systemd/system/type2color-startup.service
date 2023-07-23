@@ -1,0 +1,10 @@
+
+[Unit]
+Description=Type2Color Startup Script
+After=default.target
+
+[Service]
+ExecStart=/usr/local/bin/type2color.sh
+
+[Install]
+WantedBy=default.target

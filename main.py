@@ -10,7 +10,8 @@ import time
 import random
 
 from rpi_ws281x import PixelStrip, Color
-from getkey import getkey, keys
+
+from evdev import InputDevice, categorize, ecodes
 
 # LED strip configuration:
 LED_COUNT = 16        # Number of LED pixels.
@@ -36,23 +37,29 @@ def main():
     strip = PixelStrip(LED_COUNT, LED_PIN, LED_FREQ_HZ, LED_DMA, LED_INVERT, LED_BRIGHTNESS, LED_CHANNEL)
     # Intialize the library (must be called once before other functions).
     strip.begin()
+    # sudo dnf install evtest
+    # sudo evtest
+    dev = InputDevice('/dev/input/event0')
 
     colorWipe(strip, Color(0, 0, 0), 10)
     try:
-        while True:
-            key = getkey()
-            led_id = random.randint(0, 16)
-            red = random.randint(0, 255)
-            blue = random.randint(0, 255)
-            green = random.randint(0, 255)
-            logging.info("key '%s'", key)
-            logging.info("led_id %d", led_id)
-            logging.info("red %d, blue %d green %d", red, blue, green)
-            logging.info("Enabling led")
-            colorWipe(strip, Color(red, blue, green), 10)
-            time.sleep(1)
-            colorWipe(strip, Color(0, 0, 0), 10)
-            logging.info("Disabling led")
+        for event in dev.read_loop():
+            if event.type == ecodes.EV_KEY:
+                key_event = categorize(event)
+                if key_event.keystate == key_event.key_down:
+                    key = key_event.keycode
+                    led_id = random.randint(0, 16)
+                    red = random.randint(0, 255)
+                    blue = random.randint(0, 255)
+                    green = random.randint(0, 255)
+                    logging.info("key '%s'", key)
+                    logging.info("led_id %d", led_id)
+                    logging.info("red %d, blue %d green %d", red, blue, green)
+                    logging.info("Enabling led")
+                    colorWipe(strip, Color(red, blue, green), 10)
+                    time.sleep(1)
+                    colorWipe(strip, Color(0, 0, 0), 10)
+                    logging.info("Disabling led")
 
     except SyntaxError:
         pass
