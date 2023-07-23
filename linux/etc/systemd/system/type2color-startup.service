@@ -4,10 +4,7 @@ Description=Type2Color Startup Script
 After=default.target
 
 [Service]
-ExecStart=/usr/local/bin/color2type.sh
-Restart = on-failure # Restart when there are errors
-RestartSec = 5
-TimeoutStartSec = infinity
+ExecStart=/usr/local/bin/type2color.sh
 
 [Install]
 WantedBy=default.target
